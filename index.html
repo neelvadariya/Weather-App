@@ -1,0 +1,50 @@
+<html>
+<head>
+    <title>Weather App</title>
+    <link rel="stylesheet" type="text/css" href="api.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <label for="cityInput">Enter City:</label>
+            <input type="text" id="cityInput" placeholder="e.g., Keshod">
+            <button onclick="getWeather()">Enter</button>
+            <h2><img src="loca.png" class="imm" alt=""><span id="location"></span></h2>
+            <h6 id="Weather"></h6>
+            <h4><span id="temp"></span><sup>o</sup>C</h4>
+            <img src="" id="icon">
+            <button onclick="window.location.reload()" class="refresh"><img src="ref.png" class="immm"></button>
+        </div>
+    </div>
+
+    <script>
+        function getWeather() {
+            var city = document.getElementById('cityInput').value;
+            var apiKey = "244101fe18d7edb46a9cc5feb19a4932";
+            var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey;
+
+            var request = new XMLHttpRequest();
+            request.open('GET', apiUrl, true);
+            request.onload = function () {
+                if (request.status >= 200 && request.status < 400) {
+                    var obj = JSON.parse(this.response);
+                    console.log(obj);
+                    document.getElementById('Weather').innerHTML = obj.weather[0].description;
+                    document.getElementById('location').innerHTML = obj.name;
+                    document.getElementById('temp').innerHTML = (obj.main.temp - 273.15).toFixed(2);
+                    document.getElementById('icon').src = "https://openweathermap.org/img/w/" + obj.weather[0].icon + ".png";
+                } else {
+                    console.log("City data is not available");
+                    // Clear the previous data in case of an error
+                    document.getElementById('Weather').innerHTML = "";
+                    document.getElementById('location').innerHTML = "";
+                    document.getElementById('temp').innerHTML = "";
+                    document.getElementById('icon').src = "";
+                }
+            }
+            request.send();
+        }
+    </script>
+</body>
+</html>
